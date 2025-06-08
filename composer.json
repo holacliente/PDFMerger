@@ -1,5 +1,5 @@
 {
-    "name": "myokyawhtun/pdfmerger",
+    "name": "holacliente/pdfmerger",
     "description": "PDFMerger for PHP (PHP 5 and up to PHP 7.1 Compatible)",
     "authors": [
     	{
@@ -13,6 +13,10 @@
     	{
     		"name":"Myo Kyaw Htun",
     		"email":"myochauhtun@gmail.com"
+    	},
+		{
+    		"name":"Luis Macayo",
+    		"email":"admin@holacliente.com"
     	}
     ],
     "require":{
@@ -21,7 +25,7 @@
     "minimum-stability":"dev",
     "autoload":{
     	"psr-0":{
-    		"PDFMerger": "PDFMerger.php"
+			"Holacliente\\PDFMerger\\": "src/"
     	}
     }
 }

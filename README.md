@@ -20,6 +20,10 @@ I tested with PHP 7.1 on my local machine and it still works.
 
 FPDF and FPDI libraries replaced by TCPDF with TCPDI extension and parser.
 
+## PHP 7.3+ Compatible
+
+Remove {$i} expressions to [$i]
+
 ### Example Usage
 ```php
 include 'PDFMerger.php';

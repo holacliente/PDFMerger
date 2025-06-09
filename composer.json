@@ -1,7 +1,7 @@
 {
     "name": "holacliente/pdfmerger",
     "description": "PDFMerger for PHP (PHP 5 and up to PHP 7.1 Compatible)",
-	"version": "1.0.6",
+	"version": "1.0.7",
     "authors": [
     	{
     		"name":"Jarrod Nettles",

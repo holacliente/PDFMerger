@@ -23,6 +23,8 @@ FPDF and FPDI libraries replaced by TCPDF with TCPDI extension and parser.
 ## PHP 7.3+ Compatible
 
 Remove {$i} expressions to [$i]
+Fix TCPDF expressions deprecated
+Fix TCPDI expressions deprecated
 
 ### Example Usage
 ```php

@@ -34,6 +34,7 @@
  */
 namespace Holacliente\PDFMerger;
 use Exception;
+use TCPDI;
 
 class PDFMerger
 {
@@ -85,9 +86,9 @@ class PDFMerger
 	{
 		if(!isset($this->_files) || !is_array($this->_files)): throw new Exception("No PDFs to merge."); endif;
 
-    $fpdi = new TCPDI;
-    $fpdi->SetPrintHeader(false);
-    $fpdi->SetPrintFooter(false);
+		$fpdi = new TCPDI;
+		$fpdi->SetPrintHeader(false);
+		$fpdi->SetPrintFooter(false);
 
 		//merger operations
 		foreach($this->_files as $file)

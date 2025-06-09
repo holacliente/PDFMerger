@@ -31,49 +31,49 @@ class TCPDI extends FPDF_TPL {
      * Actual filename
      * @var string
      */
-    var $current_filename;
+    public $current_filename;
 
     /**
      * Parser-Objects
      * @var array
      */
-    var $parsers;
+    public $parsers = array();
     
     /**
      * Current parser
      * @var object
      */
-    var $current_parser;
+    public $current_parser;
     
     /**
      * object stack
      * @var array
      */
-    var $_obj_stack;
+    public $_obj_stack = array();
     
     /**
      * done object stack
      * @var array
      */
-    var $_don_obj_stack;
+    public $_don_obj_stack = array();
 
     /**
      * Current Object Id.
      * @var integer
      */
-    var $_current_obj_id;
+    public $_current_obj_id;
     
     /**
      * The name of the last imported page box
      * @var string
      */
-    var $lastUsedPageBox;
+    public $lastUsedPageBox;
     
     /**
      * Cache for imported pages/template ids
      * @var array
      */
-    var $_importedPages = array();
+    public $_importedPages = array();
     
     /**
      * Set a source-file
@@ -86,7 +86,7 @@ class TCPDI extends FPDF_TPL {
         
         if (!isset($this->parsers[$filename]))
             $this->parsers[$filename] = $this->_getPdfParser($filename);
-        $this->current_parser =& $this->parsers[$filename];
+        $this->current_parser = $this->parsers[$filename];
         $this->setPDFVersion(max($this->getPDFVersion(), $this->current_parser->getPDFVersion()));
         
         return $this->parsers[$filename]->getPageCount();
@@ -104,7 +104,7 @@ class TCPDI extends FPDF_TPL {
         
         if (!isset($this->parsers[$filename]))
             $this->parsers[$filename] = new tcpdi_parser($pdfdata, $filename, PDF_PARSER_ERROR_HANDLER_EXCEPTION);
-        $this->current_parser =& $this->parsers[$filename];
+        $this->current_parser = $this->parsers[$filename];
         $this->setPDFVersion(max($this->getPDFVersion(), $this->current_parser->getPDFVersion()));
         
         return $this->parsers[$filename]->getPageCount();
@@ -157,7 +157,7 @@ class TCPDI extends FPDF_TPL {
         if (isset($this->_importedPages[$pageKey]))
             return $this->_importedPages[$pageKey];
         
-        $parser =& $this->parsers[$fn];
+        $parser = $this->parsers[$fn];
         $parser->setPageno($pageno);
 
         if (!in_array($boxName, $parser->availableBoxes))
@@ -186,8 +186,8 @@ class TCPDI extends FPDF_TPL {
         
         $this->tpl++;
         $this->tpls[$this->tpl] = array();
-        $tpl =& $this->tpls[$this->tpl];
-        $tpl['parser'] =& $parser;
+        $tpl = &$this->tpls[$this->tpl];
+        $tpl['parser'] = $parser;
         $tpl['resources'] = $parser->getPageResources();
         $tpl['buffer'] = $parser->getContent();
         $tpl['box'] = $box;
@@ -350,7 +350,7 @@ class TCPDI extends FPDF_TPL {
             $this->_out('/Resources ');
 
             if (isset($tpl['resources'])) {
-                $this->current_parser =& $tpl['parser'];
+                $this->current_parser = $tpl['parser'];
                 $this->pdf_write_value($tpl['resources']); // "n" will be changed
             } else {
                 $this->_out('<</ProcSet [/PDF /Text /ImageB /ImageC /ImageI]');
@@ -481,9 +481,7 @@ class TCPDI extends FPDF_TPL {
                 // A dictionary.
                 $this->_straightOut('<<');
 
-                reset ($value[1]);
-
-                while (list($k, $v) = each($value[1])) {
+                foreach ($value[1] as $k => $v) {
                     $this->_straightOut($k . ' ');
                     $this->pdf_write_value($v);
                 }
@@ -495,7 +493,7 @@ class TCPDI extends FPDF_TPL {
 
                 // An indirect object reference
                 // Fill the object stack if needed
-                $cpfn =& $this->current_parser->uniqueid;
+                $cpfn = $this->current_parser->uniqueid;
                 
                 if (!isset($this->_don_obj_stack[$cpfn][$value[1]])) {
                     $this->_newobj(false, true);

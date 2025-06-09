@@ -1656,30 +1656,37 @@ class TCPDF_FONTS {
 
 
 	/**
-	 * Returns the unicode caracter specified by the value
-	 * @param $c (int) UTF-8 value
-	 * @param $unicode (boolean) True if we are in unicode mode, false otherwise.
-	 * @return Returns the specified character.
-	 * @since 2.3.000 (2008-03-05)
-	 * @public static
+	 * Devuelve el carácter Unicode correspondiente al punto de código dado.
+	 *
+	 * @param int $codepoint Punto de código Unicode (de 0 a 0x10FFFF)
+	 * @return string Caracter UTF-8 o cadena vacía si no es válido.
 	 */
-	public static function unichr($c, $unicode=true) {
-		if (!$unicode) {
-			return chr($c);
-		} elseif ($c <= 0x7F) {
-			// one byte
-			return chr($c);
-		} elseif ($c <= 0x7FF) {
-			// two bytes
-			return chr(0xC0 | $c >> 6).chr(0x80 | $c & 0x3F);
-		} elseif ($c <= 0xFFFF) {
-			// three bytes
-			return chr(0xE0 | $c >> 12).chr(0x80 | $c >> 6 & 0x3F).chr(0x80 | $c & 0x3F);
-		} elseif ($c <= 0x10FFFF) {
-			// four bytes
-			return chr(0xF0 | $c >> 18).chr(0x80 | $c >> 12 & 0x3F).chr(0x80 | $c >> 6 & 0x3F).chr(0x80 | $c & 0x3F);
-		} else {
+	public static function unichr($codepoint, $unicode = true) {
+		if (!is_int($codepoint) || $codepoint < 0 || $codepoint > 0x10FFFF) {
 			return '';
+		}
+
+		// Si está disponible mb_convert_encoding, usarlo
+		if (function_exists('mb_convert_encoding')) {
+			// Convertir a entidad HTML y luego a UTF-8
+			return mb_convert_encoding('&#' . $codepoint . ';', 'UTF-8', 'HTML-ENTITIES');
+		}
+
+		// Si no está mbstring, usar manualmente codificación binaria
+		if ($codepoint <= 0x7F) {
+			return chr($codepoint);
+		} elseif ($codepoint <= 0x7FF) {
+			return chr(0xC0 | ($codepoint >> 6)) .
+				chr(0x80 | ($codepoint & 0x3F));
+		} elseif ($codepoint <= 0xFFFF) {
+			return chr(0xE0 | ($codepoint >> 12)) .
+				chr(0x80 | (($codepoint >> 6) & 0x3F)) .
+				chr(0x80 | ($codepoint & 0x3F));
+		} else {
+			return chr(0xF0 | ($codepoint >> 18)) .
+				chr(0x80 | (($codepoint >> 12) & 0x3F)) .
+				chr(0x80 | (($codepoint >> 6) & 0x3F)) .
+				chr(0x80 | ($codepoint & 0x3F));
 		}
 	}
 
